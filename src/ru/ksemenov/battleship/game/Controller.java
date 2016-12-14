@@ -17,10 +17,6 @@ public class Controller extends Observable {
         this.currentPlayer = firstPLayer;
     }
 
-    public Player getCurrentPlayer() {
-        return currentPlayer;
-    }
-
     public void changePlayer(){
         if (currentPlayer == null)
             return;
@@ -45,10 +41,6 @@ public class Controller extends Observable {
             setChanged();
         }
         return result;
-    }
-
-    private boolean isPlayerWin(Player player) {
-        return player.getBattleFieldController().getModel().isAllShipsDestroyed();
     }
 
     public Player getFirstPLayer() {
