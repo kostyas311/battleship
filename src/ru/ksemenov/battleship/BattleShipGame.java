@@ -19,7 +19,7 @@ public class BattleShipGame extends JFrame implements Observer {
     public BattleShipGame() throws HeadlessException {
 
         this.controller = new Controller();
-        ((Observable)controller).addObserver(this);
+        controller.addObserver(this);
 
         this.gamePanel = new JPanel();
         this.gamePanel.setLayout(new GridLayout(1, 2));
@@ -32,8 +32,8 @@ public class BattleShipGame extends JFrame implements Observer {
         this.setLocationRelativeTo(null);
         this.setLayout(new BorderLayout());
         this.btnStartGame.addActionListener(e -> start());
-        this.gamePanel.add((Component) controller.getSecondPLayer().getBattleFieldController().getView());
-        this.gamePanel.add((Component) controller.getFirstPLayer().getBattleFieldController().getView());
+        this.gamePanel.add(controller.getSecondPLayer().getBattleFieldController().getView());
+        this.gamePanel.add(controller.getFirstPLayer().getBattleFieldController().getView());
         this.add(gamePanel, BorderLayout.CENTER);
         this.add(btnStartGame, BorderLayout.SOUTH);
         controller.getFirstPLayer().render();
@@ -57,6 +57,6 @@ public class BattleShipGame extends JFrame implements Observer {
     }
 
     public static void main(String[] args) {
-        BattleShipGame battleShipGame = new BattleShipGame();
+        new BattleShipGame();
     }
 }
