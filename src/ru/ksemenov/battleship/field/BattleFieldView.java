@@ -5,8 +5,6 @@ import ru.ksemenov.battleship.ResourceLoader;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 
 /**
@@ -26,13 +24,9 @@ public class BattleFieldView extends JPanel {
         this.resourceLoader = ResourceLoader.getInstance();
         this.battleFieldController = battleFieldController;
         this.bufferedImage = new BufferedImage(366, 362, BufferedImage.TYPE_INT_RGB);
-        this.addMouseMotionListener((MouseMotionListener) battleFieldController);
-        this.addMouseListener((MouseListener) battleFieldController);
+        this.addMouseMotionListener(battleFieldController);
+        this.addMouseListener(battleFieldController);
         setSize(R.BATTLE_FIELD_WIDTH, R.BATTLE_FIELD_HEIGHT);
-    }
-
-    public BattleFieldController getController() {
-        return battleFieldController;
     }
 
     public void update(BattleFieldModel model) {

@@ -117,10 +117,4 @@ public class Cell {
     public String toString() {
         return "Cell at (" + x + " ; " + y + ")";
     }
-
-    public void destroy() {
-        if (state != CELL_STATE_DESTROYED){
-            state = CELL_STATE_DESTROYED;
-        }
-    }
 }

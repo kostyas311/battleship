@@ -36,35 +36,19 @@ class Ship {
         return x;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
     public int getY() {
         return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 
     public int getLength() {
         return length;
     }
 
-    public void setLength(int length) {
-        this.length = length;
-    }
-
     public int getRotation() {
         return direction;
     }
 
-    public void setDirection(int direction) {
-        this.direction = direction;
-    }
-
-    public boolean isDestroyed(Cell[][] cells, int fieldSize) {
+    public boolean isDestroyed(Cell[][] cells) {
         if (direction == 0) {
             for (int i = 0; i < length; i++) {
                 if (cells[x][y + i].getState() != Cell.CELL_STATE_DESTROYED)
@@ -80,7 +64,7 @@ class Ship {
         }
     }
 
-    public boolean containsPoint(Cell[][] cells, int x, int y) {
+    public boolean containsPoint(int x, int y) {
         if (direction == 0) {
             for (int i = this.y; i < this.y + length; i++) {
                 if (this.x == x && i == y)
@@ -109,20 +93,6 @@ class Ship {
         }
 
         return health;
-    }
-
-    public Cell getActiveCell(Cell[][] cells) {
-        if (this.direction == 0){
-            for (int i = 0; i < length; i++)
-                if (cells[this.x][this.y + i].getState() == Cell.CELL_STATE_ACTIVE)
-                    return  cells[this.x][this.y + i];
-        }else {
-            for (int i = 0; i < length; i++)
-                if (cells[this.x + i][this.y].getState() == Cell.CELL_STATE_DESTROYED)
-                    return  cells[this.x + i][this.y];
-        }
-
-        return null;
     }
 }
 
@@ -153,36 +123,11 @@ public class BattleFieldModel{
     private Ship getShipAt(int x, int y) {
         if (cells[x][y].isShip()) {
             for (Ship ship : shipList) {
-                if (ship.containsPoint(cells, x, y)) {
+                if (ship.containsPoint(x, y)) {
                     return ship;
                 }
             }
         }
-        return null;
-    }
-
-    public int getShipHealthByCell(Cell cell) {
-        if (cell == null){
-            return -1;
-        }
-
-        Ship ship = getShipAt(cell.getRow(), cell.getColumn());
-        if (ship != null){
-            return ship.getHealth(cells);
-        }
-        return -1;
-    }
-
-    public Cell getActiveShipCell(Cell cell){
-        if (cell == null){
-            return null;
-        }
-
-        Ship ship = getShipAt(cell.getRow(), cell.getColumn());
-        if (ship != null){
-            return ship.getActiveCell(cells);
-        }
-
         return null;
     }
 
@@ -200,7 +145,7 @@ public class BattleFieldModel{
         cell.setState(Cell.CELL_STATE_DESTROYED);
         Ship ship = getShipAt(cell.getRow(), cell.getColumn());
         if (ship != null) {
-            if (ship.isDestroyed(this.cells, this.fieldSize)) {
+            if (ship.isDestroyed(this.cells)) {
                 updateNeightbourCells(ship.getX(), ship.getY(), ship.getRotation(), ship.getLength(), Cell.CELL_STATE_DESTROYED);
             }
         }
@@ -348,63 +293,10 @@ public class BattleFieldModel{
     public boolean isAllShipsDestroyed() {
         int count = 0;
         for (Ship ship : shipList) {
-            if (ship.isDestroyed(this.cells, fieldSize)) {
+            if (ship.isDestroyed(this.cells)) {
                 count++;
             }
         }
         return count == 10;
-    }
-
-    public int getNeightboursCount(Cell cell, byte state) {
-        int count = 0;
-        for (int i = -1; i < 2; i++){
-            int row = cell.getRow();
-            int col = cell.getColumn();
-
-            if (row - 1 >= 0 && cells[row - 1][col].getState() == state){
-                count++;
-            }
-
-            if (row + 1 < fieldSize && cells[row + 1][col].getState() == state){
-                count++;
-            }
-
-            if (col - 1 >= 0 && cells[row][col - 1].getState() == state){
-                count++;
-            }
-
-            if (col + 1 < fieldSize && cells[row][col + 1].getState() == state){
-                count++;
-            }
-        }
-        return count;
-    }
-
-    public Cell findFirstNeightbour(Cell cell, byte state, int direction) {
-        for (int i = -1; i < 2; i++){
-            int row = cell.getRow();
-            int col = cell.getColumn();
-
-            if (direction == 0) {
-
-                if (row - 1 >= 0 && cells[row - 1][col].getState() == state) {
-                    return cells[row - 1][col];
-                }
-
-                if (row + 1 < fieldSize && cells[row + 1][col].getState() == state) {
-                    return cells[row + 1][col];
-                }
-            } else {
-
-                if (col - 1 >= 0 && cells[row][col - 1].getState() == state) {
-                    return cells[row][col - 1];
-                }
-
-                if (col + 1 < fieldSize && cells[row][col + 1].getState() == state) {
-                    return cells[row][col + 1];
-                }
-            }
-        }
-        return null;
     }
 }
