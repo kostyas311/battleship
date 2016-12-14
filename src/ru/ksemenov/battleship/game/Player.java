@@ -4,7 +4,6 @@ import ru.ksemenov.battleship.field.BattleFieldController;
 import ru.ksemenov.battleship.field.Cell;
 
 import java.util.Random;
-import java.util.Stack;
 
 /**
  * Created by ksemenov on 04.12.16.
@@ -18,25 +17,15 @@ public class Player {
     private Cell lastDestroyedCell;
     private boolean findNewShip;
     private int direction;
-    private int destroyCount;
     private int x;
     private int y;
-    private int t;
-    private Stack<Cell> cellStack;
     private boolean needToChangeDirection;
-    private int shots[][];
-    private int shipLength;
 
     public Player(Controller сontroller, String name) {
         this.name = name;
         this.battleFieldController = new BattleFieldController(this);
         this.gameController = сontroller;
         this.findNewShip = true;
-        this.cellStack = new Stack<>();
-        this.shipLength = 4;
-
-
-        this.t = -1;
     }
 
     public Player(Controller сontroller, String name, boolean protectedView) {
@@ -52,24 +41,8 @@ public class Player {
         return battleFieldController;
     }
 
-    public void setBattleFieldController(BattleFieldController battleFieldController) {
-        this.battleFieldController = battleFieldController;
-    }
-
     public boolean isProtectedView() {
         return protectedView;
-    }
-
-    public void setProtectedView(boolean protectedView) {
-        this.protectedView = protectedView;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public void render() {
@@ -79,21 +52,9 @@ public class Player {
     public void generate() {
         battleFieldController.getModel().generate();
     }
-
-    private void restorePoint() {
-        if (cellStack.size() > 0) {
-            Cell cell = cellStack.firstElement();
-            x = cell.getRow();
-            y = cell.getColumn();
-            cellStack.clear();
-        }
-    }
-
     
     public void turn() {
         Cell[][] cells = battleFieldController.getModel().getCells();
-        int size = battleFieldController.getModel().getFieldSize();
-        //  int x = 0 , y = 0;
         boolean isDestroyed = true;
 
         Random random = new Random();
@@ -108,7 +69,6 @@ public class Player {
 
             } else {
                 Cell cell = battleFieldController.getModel().getInjured();
-                System.out.println("injured " + cell);
                 if (cell == null) {
                     findNewShip = true;
                     continue;
@@ -177,8 +137,7 @@ public class Player {
         }
 
     }
-
-
+    
     @Override
     public String toString() {
         return name;
